@@ -450,7 +450,7 @@ void Task4(void){
 		//*******YOU DEFINE THIS FUNCTION********
 		BSP_LCD_PlotPoint(X , LIGHTCOLOR); // !!!
 		BSP_LCD_PlotPoint(Y , MAGCOLOR); // !!!
-		Scaled_Select = Select * 128; // !!! Created a scaled version of Select in order to be visible on the LCD.
+		Scaled_Select = (uint16_t)Select * 128; // !!! Created a scaled version of Select in order to be visible on the LCD.
 		BSP_LCD_PlotPoint(Scaled_Select , EWMACOLOR); // !!!
 		
 	}
@@ -508,8 +508,7 @@ int main(void){
   Task3_Init();    // buttons init
   Task4_Init();    // LCD graphics init
   Task5_Init();    // LCD text init
-	TaskC_Init(); 		// !!!
-	BSP_Joystick_Input(&X, &Y, &Select);
+	TaskC_Init(); 		// !!! Initialize TaskC
   Time = 0;
   EnableInterrupts(); // interrupts needed for grader to run
   while(1){
@@ -520,8 +519,8 @@ int main(void){
 			}
       Task1();  // sample accelerometer
       Task3();  // check the buttons and change mode if pressed
-      Task4();  // update the plot
-			TaskC(); // !!!
+			TaskC(); // !!! run TaskC to get Joystick data
+      Task4();  // update the plot			
 		}
     Task2();   // sample light at 1 Hz
     Task5();   // update the LCD text at 1 Hz

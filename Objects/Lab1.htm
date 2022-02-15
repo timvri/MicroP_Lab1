@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Lab1.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Lab1.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Feb 15 16:22:57 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Feb 15 16:28:33 2022
 <BR><P>
 <H3>Maximum Stack Usage =        160 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1340,8 +1340,7 @@ Global Symbols
 <P><STRONG><a name="[e6]"></a>BSP_Joystick_Input</STRONG> (Thumb, 56 bytes, Stack size 8 bytes, bsp.o(i.BSP_Joystick_Input))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = BSP_Joystick_Input
 </UL>
-<BR>[Called By]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TaskC
+<BR>[Called By]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TaskC
 </UL>
 
 <P><STRONG><a name="[e2]"></a>BSP_LCD_Color565</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, bsp.o(i.BSP_LCD_Color565))
@@ -1875,7 +1874,7 @@ Global Symbols
 <LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Task4
 </UL>
 
-<P><STRONG><a name="[8d]"></a>main</STRONG> (Thumb, 152 bytes, Stack size 0 bytes, lab1.o(i.main))
+<P><STRONG><a name="[8d]"></a>main</STRONG> (Thumb, 142 bytes, Stack size 0 bytes, lab1.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160 + Unknown Stack Size
 <LI>Call Chain = main &rArr; Task4_Init &rArr; drawaxes &rArr; BSP_LCD_Drawaxes &rArr; BSP_LCD_DrawChar &rArr; setAddrWindow
 </UL>
@@ -1883,7 +1882,6 @@ Global Symbols
 <LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Profile_Init
 <LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EnableInterrupts
 <LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisableInterrupts
-<LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Joystick_Input
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Delay1ms
 <LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Clock_InitFastest
 <LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TaskC_Init
