@@ -112,7 +112,8 @@ enum plotstate{
   Microphone,
   Light
 };
-enum plotstate PlotState = Accelerometer;
+enum plotstate PlotState = Accelerometer; 
+
 //color constants
 #define BGCOLOR     LCD_BLACK
 #define AXISCOLOR   LCD_ORANGE
@@ -130,18 +131,18 @@ enum plotstate PlotState = Accelerometer;
 
 //Define TaskC global variables for the x and y data and the push data (when the joystick is pressed down)
 //Be sure to make variables of the right type, check the joystick section of BSP.c or BSP.h to find out what to use
-uint16_t x;
-uint16_t y;
-uint16_t select;
+uint16_t X; // !!!  X, Y, and Select are the global variables I have declared to store my joystick ADC values, they are used in Task4 to display on the LCD
+uint16_t Y; // !!!
+uint8_t Select;	// !!!
 
 void TaskC_Init(void) {
 	//*****YOU IMPLEMENT THIS FUNCTION******
-
+	BSP_Joystick_Init(); // !!! This function initiates the Joystick ADC and ports
 }
 
 void TaskC(void) {
 	//*****YOU IMPLEMENT THIS FUNCTION******
-	
+	BSP_Joystick_Input(&X, &Y, &Select); // !!! This function retrieves the Joystick ADC values and Select button status
 }
 /* ****************************************** */
 /*          End of TaskC Section              */
@@ -333,7 +334,7 @@ void Task3_Init(void){
 // non-real-time task
 // checks the switches, updates the mode, and outputs to the buzzer and LED
 // Inputs:  none
-// Outputs: none
+// Outputs: nonethe 
 void Task3(void){
   static uint8_t prev1 = 0, prev2 = 0;
   uint8_t current;
@@ -396,7 +397,7 @@ void drawaxes(void){
   } else if(PlotState == Microphone){
     BSP_LCD_Drawaxes(AXISCOLOR, BGCOLOR, "Time", "Sound", SOUNDCOLOR, "", 0, SoundData+100, SoundData-100);
   } else if(PlotState == Light){
-    BSP_LCD_Drawaxes(AXISCOLOR, BGCOLOR, "Time", "Light", LIGHTCOLOR, "", 0, LIGHT_MAX, LIGHT_MIN);
+		BSP_LCD_Drawaxes(AXISCOLOR, BGCOLOR, "Time", "Joystick", LIGHTCOLOR, "", 0, 1024, 0); // I modified the Light PlotState to instead draw the Joystick data. The axes range is 0 to 1024 for the raw ADC range.
   }
 }
 
@@ -430,6 +431,7 @@ void Task4_Init(void){
 // Inputs:  none
 // Outputs: none
 void Task4(void){
+	uint16_t Scaled_Select; // !!! Created a scaled version of Select in order to be visible on the LCD.
   TExaS_Task4();     // record system time in array, toggle virtual logic analyzer
   Profile_Toggle4(); // viewed by the logic analyzer to know Task4 started
 
@@ -443,10 +445,14 @@ void Task4(void){
   } else if(PlotState == Microphone){
     BSP_LCD_PlotPoint(SoundData, SOUNDCOLOR);
   } else if(PlotState == Light){
-    BSP_LCD_PlotPoint(LightData, LIGHTCOLOR);
+    //BSP_LCD_PlotPoint(LightData, LIGHTCOLOR); // I removed the light sensor data and instead plotted the X, Y, and Select data
  
 		//*******YOU DEFINE THIS FUNCTION********
-	
+		BSP_LCD_PlotPoint(X , LIGHTCOLOR); // !!!
+		BSP_LCD_PlotPoint(Y , MAGCOLOR); // !!!
+		Scaled_Select = Select * 128; // !!! Created a scaled version of Select in order to be visible on the LCD.
+		BSP_LCD_PlotPoint(Scaled_Select , EWMACOLOR); // !!!
+		
 	}
   BSP_LCD_PlotIncrement();
 }
@@ -502,16 +508,21 @@ int main(void){
   Task3_Init();    // buttons init
   Task4_Init();    // LCD graphics init
   Task5_Init();    // LCD text init
+	TaskC_Init(); 		// !!!
+	BSP_Joystick_Input(&X, &Y, &Select);
   Time = 0;
   EnableInterrupts(); // interrupts needed for grader to run
   while(1){
     for(int i=0; i<10; i++){ // runs at about 10 Hz
-      Task0();  // sample microphone
+			for(int j=0; j<100; j++){ 			// !!! runs at about 1 kHz
+				Task0();  // sample microphone
+				BSP_Delay1ms(1); 							// !!!
+			}
       Task1();  // sample accelerometer
       Task3();  // check the buttons and change mode if pressed
       Task4();  // update the plot
-      BSP_Delay1ms(100);
-    }
+			TaskC(); // !!!
+		}
     Task2();   // sample light at 1 Hz
     Task5();   // update the LCD text at 1 Hz
     Time++;    // 1 Hz
